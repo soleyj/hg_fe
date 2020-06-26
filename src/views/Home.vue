@@ -1,8 +1,15 @@
 <template>
-  <div>
-    <Sensors/>
+<v-row>
+<v-col>
+  <Sensors/>
+</v-col>
+<v-col>
+  <Sensors/>
+</v-col>
+</v-row>
 
-  </div>
+    
+
 
 </template>
 

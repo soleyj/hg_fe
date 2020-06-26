@@ -38,8 +38,27 @@
         class="fill-height"
         fluid
       >
-            <router-view></router-view>
-
+        <v-row
+          align="center"
+          justify="center"
+        >
+          <v-col class="text-center">
+            <v-tooltip left>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  :href="source"
+                  icon
+                  large
+                  target="_blank"
+                  v-on="on"
+                >
+                  <v-icon large>mdi-code-tags</v-icon>
+                </v-btn>
+              </template>
+              <span>Source</span>
+            </v-tooltip>
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
     <v-footer
@@ -50,15 +69,15 @@
     </v-footer>
   </v-app>
 </template>
+
 <script>
-
-export default {
-  name: 'App',
-
-
-
-  data: () => ({
-    //
-  }),
-};
+  export default {
+    name:"Topbar",
+    props: {
+      source: String,
+    },
+    data: () => ({
+      drawer: null,
+    }),
+  }
 </script>

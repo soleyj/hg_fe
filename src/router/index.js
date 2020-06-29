@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import About from '../views/About.vue'
+import { mapGetters } from "vuex";
 
 Vue.use(VueRouter)
 
@@ -13,15 +15,33 @@ Vue.use(VueRouter)
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    component: About,
+    meta: { 
+      requiresAuth: true
+    }
+  },
 ]
 
 const router = new VueRouter({
   routes
+})
+
+
+
+router.beforeEach((to, from, next) => {
+  console.log(mapGetters(["isLoggedIn"]))
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    
+    if (mapGetters(["isLoggedIn"])) {
+      next()
+      
+      return
+    }
+    
+    next('/login') 
+  } else {
+    next() 
+  }
 })
 
 export default router

@@ -1,27 +1,18 @@
 <template>
-<v-row>
-<v-col>
-  <Sensors/>
-</v-col>
-<v-col>
-  <Sensors/>
-</v-col>
-</v-row>
-
-    
-
-
+ <div>
+   <Login/>
+ </div>
 </template>
 
 
 <script>
-  import Sensors from '../components/dashboard/Sensors';
+  import Login from '../components/account/login'
   export default {
     props: {
       source: String,
     },
   components: {
-    Sensors,
+    Login,
   },
     data: () => ({
       drawer: null,

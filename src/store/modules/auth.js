@@ -52,6 +52,9 @@ const actions = {
     },
     logout({commit}){
         return new Promise((resolve) => {
+          console.log( state.token)
+          axios.defaults.headers.common['Authorization'] = "Token " + ( state.token)
+          axios({url: 'http://127.0.0.1:8000/rest-auth/logout/', method:'POST'})
           commit('logout')
           localStorage.removeItem('token')
           delete axios.defaults.headers.common['Authorization']

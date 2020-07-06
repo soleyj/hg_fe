@@ -78,7 +78,7 @@
     mounted: function ()
     {
       axios.defaults.headers.common['Authorization'] = "Token " + ( (this.$store.state.auth.token))
-      axios({url: 'http://127.0.0.1:8000/api/data_hg/newest/', method:'GET'})
+      axios({url: process.env.VUE_APP_BASE_URL+'/api/data_hg/newest/', method:'GET'})
       .then(resp => {
         console.log(resp)
         this.$set(this.items[0],"text",resp.data.temp_1)
@@ -88,7 +88,7 @@
         .catch(err => {
           console.log(err)
         })
-      axios({url: 'http://127.0.0.1:8000/api/data_output/newest/', method:'GET'})
+      axios({url: process.env.VUE_APP_BASE_URL+'/api/data_output/newest/', method:'GET'})
       .then(resp => {
         console.log(resp)
         this.$set(this.outputs[0],"data",resp.data.Bomba_1)

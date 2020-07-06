@@ -1,87 +1,73 @@
 <template>
-  <v-form
+<div>  
+   <v-form
       ref="form"
       class ="input"
       v-model="valid"
       :lazy-validation="lazy"
        @submit.prevent="onSubmit" id="check-login-form"
     >
-       <v-text-field  
-        name = "light_time"
-        type="number" label="Light Time" 
-        v-bind:value="Light_time"
-        v-model = "Light_time"
-        >
-        </v-text-field>
+    <div v-for="conf in data_config" :key="conf">
+            <InputNumber v-bind:input="conf"/>
 
-        <v-text-field  
-        name = "light_on"
-        type="number" label="Light Hours" 
-        v-bind:value="Light_on"
-        v-model = "Light_on"
-    
-        >
-        </v-text-field>
+      </div>
 
-        <v-text-field  
-        name = "H20_duty"
-        type="number" label="H20_duty" 
-        v-bind:value="H20_duty"
-        v-model = "H20_duty"
-        >
-        </v-text-field>
-
-        <v-text-field 
-        name = "Max_temp"
-        type="number" label="Max_temp" 
-        v-bind:value="Max_temp"
-        v-model = "Max_temp"
-        >
-        </v-text-field>
-
-        <v-text-field  
-        name = "Fan_Duty"
-        type="number" label="Fan_Duty" 
-        v-bind:value="Fan_Duty"
-        v-model = "Fan_Duty"
-        >
-        </v-text-field>
-
-
-
+      
       <v-btn
         class="mr-4"
         type="submit" color="success" form="check-login-form"
+        
       >
         Validate
       </v-btn>
+      <v-alert type="success"
+      class ="alerts"
+      dismissible
+      @input="closeAlert"
+      value="true" v-if="type"
+        >
+      Configuracion Cargada
+    </v-alert>
     </v-form>
+    
+    
+</div>
+ 
 </template>
 
 <script>
-  import axios from 'axios'
 
+  import axios from 'axios'
+  import InputNumber from './InputNumber'
+
+  
 export default {
-    
+    components: {
+      InputNumber,
+    },  
     name:"ParameterConf",
     data:  () => ({
-        Light_time: "",
-        Light_on: "",
-        H20_duty:"",
-        Max_temp:"",
-        Fan_Duty:"",
+      
+      data_config:[
+        {title: "Light_time", value: 0},
+        {title: "Light_on", value: 0},
+        {title: "H20_duty", value: 0},
+        {title: "Max_temp", value: 0},
+        {title: "Fan_Duty",value: 0},
+        
+      ]
     }),  
     mounted: function ()
     {
       axios.defaults.headers.common['Authorization'] = "Token " + ( (this.$store.state.auth.token))
-      axios({url: 'http://127.0.0.1:8000/api/data_input/newest/', method:'GET'})
+      axios({url: process.env.VUE_APP_BASE_URL+'/api/data_input/newest/', method:'GET'})
       .then(resp => {
         console.log(resp)
-        this.Light_time = resp.data.Light_time
-        this.Light_on = resp.data.Light_on
-        this.H20_duty = resp.data.H20_duty
-        this.Max_temp = resp.data.Max_temp
-        this.Fan_Duty = resp.data.Fan_Duty
+        this.data_config[0].value = resp.data.Light_time
+        this.data_config[1].value  = resp.data.Light_on
+        this.data_config[2].value  = resp.data.H20_duty
+        this.data_config[3].value  = resp.data.Max_temp
+        this.data_config[4].value  = resp.data.Fan_Duty
 
         
         })
@@ -91,12 +77,22 @@ export default {
     },
     methods: {
         onSubmit() {
-            let data ={"Light_time":this.Light_time,"Light_on":this.Light_on,"H20_duty":this.H20_duty,"Fan_Duty":this.Fan_Duty,"Max_temp":this.Max_temp,"machine":1}
+            this.type = 'true'
+            let data ={"Light_time":this.data_config[0].value,"Light_on":this.data_config[1].value,"H20_duty": this.data_config[2].value,"Fan_Duty":this.data_config[4].value,"Max_temp":this.data_config[3].value,"machine":1}
 
             axios.defaults.headers.common['Authorization'] = "Token " + ( (this.$store.state.auth.token))
 
             axios({url: 'http://127.0.0.1:8000/api/data_input/', method:'POST',data:data})
             console.log()
+            this.type = 'true'
+            
+            let timer = this.onSubmit.timer
+            if (timer) {
+              clearTimeout(timer)
+            }
+            this.onSubmit.timer = setTimeout(() => {
+                this.type = null
+            }, 3000)
         }
     },
 }
@@ -105,6 +101,10 @@ export default {
 
 <style scoped>
     .input{
-        max-width: 400px;
+        max-width: 350px;
+    }
+    .alerts{
+       max-width: 350px;
+       margin-top: 10px;
     }
 </style>

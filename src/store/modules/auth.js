@@ -33,7 +33,7 @@ const actions = {
         return new Promise((resolve, reject) => {
 
           commit('auth_request')
-          axios({url: 'http://127.0.0.1:8000/rest-auth/login/', data: user_, method: 'POST' })
+          axios({url: process.env.VUE_APP_BASE_URL+ '/rest-auth/login/', data: user_, method: 'POST' })
           .then(resp => {
 
             const token = resp.data.key
@@ -54,7 +54,7 @@ const actions = {
         return new Promise((resolve) => {
           console.log( state.token)
           axios.defaults.headers.common['Authorization'] = "Token " + ( state.token)
-          axios({url: 'http://127.0.0.1:8000/rest-auth/logout/', method:'POST'})
+          axios({url: process.env.VUE_APP_BASE_URL+ '/rest-auth/logout/', method:'POST'})
           commit('logout')
           localStorage.removeItem('token')
           delete axios.defaults.headers.common['Authorization']

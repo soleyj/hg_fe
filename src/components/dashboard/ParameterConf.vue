@@ -82,7 +82,7 @@ export default {
 
             axios.defaults.headers.common['Authorization'] = "Token " + ( (this.$store.state.auth.token))
 
-            axios({url: 'http://127.0.0.1:8000/api/data_input/', method:'POST',data:data})
+            axios({url: VUE_APP_BASE_URL+ 'api/data_input/', method:'POST',data:data})
             console.log()
             this.type = 'true'
             
